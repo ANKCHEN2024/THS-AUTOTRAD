@@ -3,3 +3,4 @@ python-dotenv>=1.0.0
 pandas>=2.0.0
 numpy>=1.24.0
 pywinauto>=0.6.8
+ddddocr>=1.4.7
