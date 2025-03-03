@@ -7,13 +7,21 @@ import pyautogui
 import logging
 
 # 配置日志记录
-logging.basicConfig(
-    level=logging.INFO,      # 设置日志级别为INFO
-    format='%(asctime)s - %(levelname)s - %(message)s',  # 设置日志格式：时间 - 级别 - 消息
-    handlers=[
-        logging.StreamHandler()  # 只输出到控制台
-    ]
-)
+log_file = 'logs/ths_client.log'
+os.makedirs('logs', exist_ok=True)
+
+file_handler = logging.FileHandler(log_file, encoding='utf-8')
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
 
 class THSClient:
     def __init__(self, ths_path=None):
