@@ -34,7 +34,7 @@ class TradeWindowControl:
                 self.current_mode = 'sell'
             
             # 等待切换完成
-            time.sleep(0.5)
+            time.sleep(0.3)
             return True
             
         except Exception as e:

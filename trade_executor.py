@@ -21,8 +21,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('trade_executor.log', encoding='utf-8')
+        logging.StreamHandler()  # 只输出到控制台
     ]
 )
 
@@ -80,12 +79,8 @@ class TradeExecutor:
                 # 使用F2键直接切换到卖出界面
                 pyautogui.press('f2')
                 logging.info("使用F2键切换到卖出界面")
-            
-            time.sleep(1)  # 等待界面切换完成
-            
-            # 使用Alt+S快捷键直接定位到股票代码输入框
-            pyautogui.hotkey('alt', 's')
-            time.sleep(0.3)
+            # 等待界面切换完成
+            time.sleep(1)
             
             if mode == 'buy':
                 # 买入操作 - 使用键盘导航
@@ -270,8 +265,25 @@ def main():
             logging.info(f"从已提取的交易信号文件加载: {extracted_signals_file}")
             try:
                 with open(extracted_signals_file, 'r', encoding='utf-8') as f:
-                    trade_signals = json.load(f)
-                logging.info(f"成功加载 {len(trade_signals)} 个交易信号")
+                    all_signals = json.load(f)
+                
+                # 获取当前日期
+                today = datetime.datetime.now().date()
+                
+                # 只保留当天的交易信号
+                trade_signals = []
+                for signal in all_signals:
+                    # 将字符串格式的交易时间转换为datetime对象
+                    if isinstance(signal['交易时间'], str):
+                        signal_time = datetime.datetime.strptime(signal['交易时间'], '%Y-%m-%d %H:%M:%S')
+                    else:
+                        signal_time = signal['交易时间']
+                    
+                    # 只保留当天的交易信号
+                    if signal_time.date() == today:
+                        trade_signals.append(signal)
+                
+                logging.info(f"成功加载 {len(trade_signals)} 个当天的交易信号")
             except Exception as e:
                 logging.error(f"加载已提取的交易信号文件出错: {e}")
                 trade_signals = []

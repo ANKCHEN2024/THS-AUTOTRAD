@@ -14,10 +14,13 @@ def load_log_data(file_path):
         return None
 
 def extract_trade_signals(log_data):
-    """从日志数据中提取交易信号"""
+    """从日志数据中提取交易信号，只处理当天的交易信号"""
     if not log_data or 'data' not in log_data or 'logArr' not in log_data['data']:
         print("日志数据格式不正确")
         return []
+    
+    # 获取当前日期
+    today = datetime.datetime.now().date()
     
     log_entries = log_data['data']['logArr']
     trade_signals = []
@@ -28,6 +31,10 @@ def extract_trade_signals(log_data):
             date_str = log.split(" - ")[0].strip()
             date_time = datetime.datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
             
+            # 跳过非当天的交易信号
+            if date_time.date() != today:
+                continue
+                
             # 检查是否包含委托买入信号
             if "订单已委托" in log and "action=open" in log:
                 # 提取股票代码 - 只保留6位数字

@@ -49,7 +49,18 @@
             "2025-02-28 09:26:00 - INFO  - 买入603072.XSHG",
             "2025-02-28 09:26:00 - INFO  - ———————————————————————————————————",
             "2025-02-28 09:30:00 - INFO  - order StockOrder(entrust_id=1740705427 security=002042.XSHE mode=OrderValue: _value=45881.61125 style=MarketOrderStyle: _limit_price=6.1 side=long action=open margin=False entrust_time=2025-02-28 09:26:00 cancel_time=None finish_time=None comment= error=开仓数量必须是 100 的整数倍，调整为 7800) trade price: 6.11, amount:7800, commission: 14.297399999999998",
-            "2025-02-28 09:30:00 - INFO  - order StockOrder(entrust_id=1740705428 security=603072.XSHG mode=OrderValue: _value=45881.61125 style=MarketOrderStyle: _limit_price=38.0 side=long action=open margin=False entrust_time=2025-02-28 09:26:00 cancel_time=None finish_time=None comment= error=开仓数量必须是 100 的整数倍，调整为 1200) trade price: 38.05, amount:1200, commission: 13.697999999999999"
+            "2025-02-28 09:30:00 - INFO  - order StockOrder(entrust_id=1740705428 security=603072.XSHG mode=OrderValue: _value=45881.61125 style=MarketOrderStyle: _limit_price=38.0 side=long action=open margin=False entrust_time=2025-02-28 09:26:00 cancel_time=None finish_time=None comment= error=开仓数量必须是 100 的整数倍，调整为 1200) trade price: 38.05, amount:1200, commission: 13.697999999999999",
+            "2025-03-03 09:26:00 - INFO  - 今日无目标个股",
+            "2025-03-03 11:25:00 - INFO  - order StockOrder(entrust_id=1740971768 security=603072.XSHG mode=OrderTargetValue: _value=0.0 style=MarketOrderStyle: _limit_price=0.0 side=long action=close margin=False entrust_time=2025-03-03 11:25:00 cancel_time=None finish_time=None comment= error=) trade price: 41.63, amount:1200, commission: 64.9428",
+            "2025-03-03 11:25:00 - INFO  - 订单已委托：StockOrder(entrust_id=1740971768 security=603072.XSHG mode=OrderTargetValue: _value=0.0 style=MarketOrderStyle: _limit_price=0.0 side=long action=close margin=False entrust_time=2025-03-03 11:25:00 cancel_time=None finish_time=2025-03-03 11:25:00 comment= error=)",
+            "2025-03-03 11:25:00 - INFO  - 止盈卖出",
+            "2025-03-03 11:25:00 - INFO  - ['603072.XSHG', '天和磁材']",
+            "2025-03-03 11:25:00 - INFO  - ———————————————————————————————————",
+            "2025-03-03 14:50:00 - INFO  - order StockOrder(entrust_id=1740984088 security=002042.XSHE mode=OrderTargetValue: _value=0.0 style=MarketOrderStyle: _limit_price=0.0 side=long action=close margin=False entrust_time=2025-03-03 14:50:00 cancel_time=None finish_time=None comment= error=) trade price: 5.37, amount:7800, commission: 54.451800000000006",
+            "2025-03-03 14:50:00 - INFO  - 订单已委托：StockOrder(entrust_id=1740984088 security=002042.XSHE mode=OrderTargetValue: _value=0.0 style=MarketOrderStyle: _limit_price=0.0 side=long action=close margin=False entrust_time=2025-03-03 14:50:00 cancel_time=None finish_time=2025-03-03 14:50:00 comment= error=)",
+            "2025-03-03 14:50:00 - INFO  - 止损卖出",
+            "2025-03-03 14:50:00 - INFO  - ['002042.XSHE', '华孚时尚']",
+            "2025-03-03 14:50:00 - INFO  - ———————————————————————————————————"
         ]
     },
     "status": "0",
