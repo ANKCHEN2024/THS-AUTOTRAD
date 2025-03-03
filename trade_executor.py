@@ -7,9 +7,11 @@ import sys
 # 添加当前目录到Python路径
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from trade_window_control import TradeWindowControl
 from extract_trade_signals import load_log_data, extract_trade_signals, group_trade_signals_by_date
 import pyautogui
+
+# 导入TradeWindowControl类
+from trade_window_control import TradeWindowControl
 
 # 导入open_ths_client模块
 from open_ths_client import THSClient, main as open_ths_main
@@ -42,7 +44,7 @@ class TradeExecutor:
             open_ths_main()
             
             # 检查交易窗口是否已打开
-            time.sleep(5)  # 等待交易窗口打开
+            time.sleep(1)  # 等待交易窗口打开
             for window in pyautogui.getAllWindows():
                 if "网上股票交易" in window.title or "交易系统" in window.title:
                     logging.info(f"成功打开同花顺交易软件: {window.title}")
@@ -69,7 +71,7 @@ class TradeExecutor:
             # 切换交易模式
             mode = 'buy' if trade_signal['交易类型'] == '买入' else 'sell'
             
-            # 直接使用功能键切换到买入或卖出界面，而不是依赖trade_control
+            # 直接使用功能键切换到买入或卖出界面
             if mode == 'buy':
                 # 使用F1键直接切换到买入界面
                 pyautogui.press('f1')
@@ -81,44 +83,34 @@ class TradeExecutor:
             
             time.sleep(1)  # 等待界面切换完成
             
-            # 获取交易窗口
-            window = self.get_trading_window()
-            if not window:
-                logging.error("无法找到交易窗口")
-                return False
-            
-            # 点击窗口中心以确保激活
-            pyautogui.click(window.left + window.width // 2, window.top + window.height // 2)
-            time.sleep(0.5)
+            # 使用Alt+S快捷键直接定位到股票代码输入框
+            pyautogui.hotkey('alt', 's')
+            time.sleep(0.3)
             
             if mode == 'buy':
-                # 买入操作 - 重新设计输入流程
-                # 1. 先点击股票代码输入框
-                code_input_x = window.left + int(window.width * 0.3)
-                code_input_y = window.top + int(window.height * 0.25)
-                pyautogui.click(code_input_x, code_input_y)
-                time.sleep(0.5)
-                
+                # 买入操作 - 使用键盘导航
                 # 清空并输入股票代码
                 pyautogui.hotkey('ctrl', 'a')
                 pyautogui.press('delete')
-                time.sleep(0.5)
+                time.sleep(0.3)
                 
-                stock_code = trade_signal['股票代码'].split('.')[0]
+                # 处理股票代码，确保格式正确
+                stock_code = trade_signal['股票代码']
+                if '.' in stock_code:
+                    stock_code = stock_code.split('.')[0]
                 pyautogui.typewrite(stock_code)
                 logging.info(f"输入股票代码: {stock_code}")
                 time.sleep(1)
                 
-                # 2. 点击价格输入框
-                price_input_x = window.left + int(window.width * 0.3)
-                price_input_y = window.top + int(window.height * 0.35)
-                pyautogui.click(price_input_x, price_input_y)
-                time.sleep(0.5)
+                # 按Tab键移动到价格输入框
+                pyautogui.press('tab')
+                time.sleep(0.3)
                 
                 # 清空并输入价格
                 pyautogui.hotkey('ctrl', 'a')
-                pyautogui.press('delete')
-                time.sleep(0.5)
+                for _ in range(5):  # 多次删除确保清空
+                    pyautogui.press('backspace')
+                time.sleep(0.3)
                 
                 try:
                     price_value = float(trade_signal['价格'])
@@ -130,70 +122,58 @@ class TradeExecutor:
                     return False
                 
                 time.sleep(1)
-                
-                # 3. 点击数量输入框
-                amount_input_x = window.left + int(window.width * 0.3)
-                amount_input_y = window.top + int(window.height * 0.45)
-                pyautogui.click(amount_input_x, amount_input_y)
-                time.sleep(0.5)
+                # 按Tab键一次移动到数量输入框
+                pyautogui.press('tab')
+                time.sleep(0.3)
                 
                 # 清空并输入数量
                 pyautogui.hotkey('ctrl', 'a')
                 pyautogui.press('delete')
-                time.sleep(0.5)
-                
+                time.sleep(0.3)
                 try:
                     amount = int(float(trade_signal['数量']))
                     amount_str = str(amount)
                     pyautogui.typewrite(amount_str)
                     logging.info(f"输入数量: {amount_str}")
-                    
-                    # 确保数量输入成功 - 再次点击并输入
-                    time.sleep(0.5)
-                    pyautogui.click(amount_input_x, amount_input_y)
-                    time.sleep(0.5)
-                    pyautogui.hotkey('ctrl', 'a')
-                    pyautogui.typewrite(amount_str)
                 except Exception as e:
                     logging.error(f"数量输入出错: {e}")
                     return False
                 
                 time.sleep(1)
                 
-                # 4. 点击买入按钮
-                buy_button_x = window.left + int(window.width * 0.3)
-                buy_button_y = window.top + int(window.height * 0.65)
-                pyautogui.click(buy_button_x, buy_button_y)
-                logging.info(f"点击买入按钮: ({buy_button_x}, {buy_button_y})")
+                # 按Tab键两次移动到买入按钮
+                pyautogui.press('tab')
+                time.sleep(0.3)
+                
+                # 按回车执行买入操作
+                pyautogui.press('enter')
+                logging.info("按下回车键执行买入操作")
                 time.sleep(1)
             else:
-                # 卖出模式 - 类似买入模式的处理方式
-                # 1. 点击股票代码输入框
-                code_input_x = window.left + int(window.width * 0.3)
-                code_input_y = window.top + int(window.height * 0.25)
-                pyautogui.click(code_input_x, code_input_y)
-                time.sleep(0.5)
-                
+                # 卖出模式 - 使用键盘导航
                 # 清空并输入股票代码
                 pyautogui.hotkey('ctrl', 'a')
                 pyautogui.press('delete')
-                time.sleep(0.5)
+                time.sleep(0.3)
                 
-                stock_code = trade_signal['股票代码'].split('.')[0]
+                # 处理股票代码，确保格式正确
+                stock_code = trade_signal['股票代码']
+                if '.' in stock_code:
+                    stock_code = stock_code.split('.')[0]
                 pyautogui.typewrite(stock_code)
                 logging.info(f"输入股票代码: {stock_code}")
                 time.sleep(1)
                 
-                # 2. 直接点击数量输入框
-                amount_input_x = window.left + int(window.width * 0.3)
-                amount_input_y = window.top + int(window.height * 0.45)
-                pyautogui.click(amount_input_x, amount_input_y)
-                time.sleep(0.5)
+                # 按Tab键移动到数量输入框
+                pyautogui.press('tab')
+                time.sleep(0.3)
+                pyautogui.press('tab')
+                time.sleep(0.3)
                 
                 # 清空并输入数量
                 pyautogui.hotkey('ctrl', 'a')
                 pyautogui.press('delete')
-                time.sleep(0.5)
+                time.sleep(0.3)
                 
                 try:
                     amount = int(float(trade_signal['数量']))
@@ -206,15 +186,17 @@ class TradeExecutor:
                 
                 time.sleep(1)
                 
-                # 3. 点击卖出按钮
-                sell_button_x = window.left + int(window.width * 0.3)
-                sell_button_y = window.top + int(window.height * 0.65)
-                pyautogui.click(sell_button_x, sell_button_y)
-                logging.info(f"点击卖出按钮: ({sell_button_x}, {sell_button_y})")
+                # 按Tab键一次移动到卖出按钮
+                pyautogui.press('tab')
+                time.sleep(0.3)
+                
+                # 按回车执行卖出操作
+                pyautogui.press('enter')
+                logging.info("按下回车键执行卖出操作")
                 time.sleep(1)
             
             # 处理可能出现的弹窗
-            time.sleep(2)
+            time.sleep(1)
             pyautogui.press('enter')  # 尝试关闭可能出现的弹窗
             
             logging.info(f"执行交易: {trade_signal['交易类型']} {stock_code} "
@@ -247,7 +229,7 @@ class TradeExecutor:
                     # 点击窗口中心以确保激活
                     pyautogui.click(window.left + window.width // 2, 
                                    window.top + window.height // 2)
-                    time.sleep(0.5)
+                    time.sleep(0.3)
                     break
             
             if not found:
@@ -270,7 +252,7 @@ class TradeExecutor:
         for signal in trade_signals:
             if self.execute_single_trade(signal):
                 success_count += 1
-            time.sleep(2)  # 交易之间的间隔
+            time.sleep(1)  # 交易之间的间隔
         
         logging.info(f"交易执行完成，成功: {success_count}/{total_count}")
         return success_count

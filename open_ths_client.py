@@ -86,7 +86,7 @@ class THSClient:
             logging.info("正在启动同花顺客户端...")
             # 使用shell=True确保程序能正常启动
             self.process = subprocess.Popen(self.ths_path, shell=True)
-            time.sleep(8)  # 增加等待时间，确保程序完全启动
+            time.sleep(3)  # 增加等待时间，确保程序完全启动
             
             if self.is_running():
                 logging.info("同花顺客户端已成功启动")
@@ -122,7 +122,7 @@ class THSClient:
         """导航到交易界面"""
         try:
             # 等待界面加载
-            time.sleep(5)  # 增加等待时间
+            time.sleep(3) # 增加等待时间
             
             # 由于图像识别可能不可靠，我们直接使用快捷键
             logging.info("尝试使用快捷键导航到交易界面")
@@ -144,7 +144,7 @@ def main():
             return False  # 如果无法启动客户端，直接返回失败
         
         # 等待更长时间，让客户端有充分时间初始化
-        time.sleep(5)  # 增加等待时间
+        time.sleep(3) # 增加等待时间
         
         # 尝试查找并点击同花顺主界面上的交易按钮
         try:
@@ -180,7 +180,7 @@ def main():
                 
                 # 使用F12快捷键打开交易窗口
                 pyautogui.press('f12')
-                time.sleep(5)  # 增加等待时间
+                time.sleep(3) # 增加等待时间
                 
                 # 再次检查交易窗口是否已打开
                 for window in pyautogui.getAllWindows():

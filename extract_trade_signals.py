@@ -1,5 +1,6 @@
 import json
 import datetime
+import logging
 from collections import defaultdict
 
 def load_log_data(file_path):
@@ -23,16 +24,17 @@ def extract_trade_signals(log_data):
     
     for log in log_entries:
         try:
+            # 解析日期和时间
+            date_str = log.split(" - ")[0].strip()
+            date_time = datetime.datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+            
             # 检查是否包含委托买入信号
             if "订单已委托" in log and "action=open" in log:
-                # 解析日期和时间
-                date_str = log.split(" - ")[0].strip()
-                date_time = datetime.datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
-                
-                # 提取股票代码
+                # 提取股票代码 - 只保留6位数字
                 security_start = log.find("security=") + len("security=")
-                security_end = log.find(" ", security_start)
-                security = log[security_start:security_end]
+                security_end = log.find(".", security_start)
+                security_full = log[security_start:security_end]
+                security = ''.join(c for c in security_full if c.isdigit())[:6]
                 
                 # 提取价格
                 price_start = log.find("_limit_price=") + len("_limit_price=")
@@ -57,6 +59,38 @@ def extract_trade_signals(log_data):
                 
                 trade_signals.append(trade_signal)
                 print(f"提取到买入信号: {trade_signal}")
+            
+            # 检查是否包含卖出信号
+            elif "action=close" in log and "trade price:" in log:
+                # 提取股票代码 - 只保留6位数字
+                security_start = log.find("security=") + len("security=")
+                security_end = log.find(".", security_start)
+                security_full = log[security_start:security_end]
+                security = ''.join(c for c in security_full if c.isdigit())[:6]
+                
+                # 提取价格 - 从trade price后面提取
+                price_start = log.find("trade price:") + len("trade price:")
+                price_end = log.find(",", price_start)
+                price_str = log[price_start:price_end].strip()
+                price = float(price_str)
+                
+                # 提取数量 - 从amount后面提取
+                amount_start = log.find("amount:") + len("amount:")
+                amount_end = log.find(",", amount_start)
+                amount_str = log[amount_start:amount_end].strip()
+                amount = int(''.join(c for c in amount_str if c.isdigit()))
+                
+                # 记录交易信号
+                trade_signal = {
+                    "交易时间": date_time,
+                    "交易类型": "卖出",
+                    "股票代码": security,
+                    "价格": price,
+                    "数量": amount
+                }
+                
+                trade_signals.append(trade_signal)
+                print(f"提取到卖出信号: {trade_signal}")
                 
         except Exception as e:
             print(f"解析交易信号时出错: {e}, 日志内容: {log[:100]}...")
