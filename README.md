@@ -1,24 +1,22 @@
 # 同花顺自动化交易助手
 
-这个项目提供了一套自动化工具，用于获取聚宽量化交易平台的模拟策略日志信息，并通过同花顺客户端实现自动化交易操作。
+## 项目简介
+本项目是一个基于Python的同花顺自动化交易系统，能够自动监控交易信号、执行交易操作，实现自动化交易流程。
 
-## 项目文件说明
-
-- `get_jq_data.py`: 从聚宽平台获取策略日志数据的脚本
-- `jq_log_data.json`: 保存的策略日志数据
-- `extract_trade_signals.py`: 从日志数据中提取交易信号
-- `trade_signals.json`: 提取的交易信号数据
-- `trade_executor.py`: 执行自动化交易的核心模块
-- `trade_window_control.py`: 控制同花顺交易窗口的功能模块
-- `open_ths_client.py`: 打开同花顺客户端和交易界面
-- `cookies.txt`: 存储访问聚宽平台的cookie信息
-- `ths_client.log`: 同花顺客户端操作日志
-- `trade_executor.log`: 交易执行日志
-- `requirements.txt`: 项目依赖包列表
-- `venv/`: Python虚拟环境
+## 系统功能
+- 自动启动同花顺客户端
+- 自动登录交易界面
+- 实时监控交易信号
+- 自动执行买入/卖出操作
+- 交易日志记录和分析
 
 ## 环境配置
+### 1. 系统要求
+- Windows操作系统
+- Python 3.8或以上版本
+- 同花顺客户端（已安装并配置）
 
+### 2. 安装步骤
 ```bash
 # 创建虚拟环境
 python -m venv venv
@@ -31,19 +29,17 @@ pip install -r requirements.txt
 ```
 
 ## 使用方法
-
-### 1. 获取聚宽策略日志
-
+### 1. 启动监控系统
 ```bash
-# 激活虚拟环境
-.\venv\Scripts\activate
-
-# 运行数据获取脚本
-python get_jq_data.py
+# 直接运行批处理文件
+start_monitor.bat
 ```
+启动后系统会自动：
+- 启动同花顺客户端
+- 开始监控交易信号
+- 执行自动化交易
 
-### 2. 提取交易信号
-
+### 2. 交易信号提取
 ```bash
 # 激活虚拟环境
 .\venv\Scripts\activate
@@ -52,27 +48,55 @@ python get_jq_data.py
 python extract_trade_signals.py
 ```
 
-### 3. 执行自动化交易
-
+### 3. 手动执行交易
 ```bash
 # 激活虚拟环境
 .\venv\Scripts\activate
 
-# 打开同花顺客户端并执行交易
+# 执行交易
 python trade_executor.py
 ```
 
-如果同花顺安装在非默认路径，可以在open_ths_client.py中修改路径：
+## 功能模块说明
+### 1. open_ths_client.py
+- 负责启动同花顺客户端
+- 自动打开交易界面
+- 处理客户端异常情况
 
-```python
-client_hexin = THSClient("D:\自定义路径\同花顺\xiadan.exe")
-```
+### 2. extract_trade_signals.py
+- 从日志中提取交易信号
+- 解析买入/卖出指令
+- 记录交易信息
+
+### 3. trade_executor.py
+- 执行自动化交易
+- 处理买入/卖出操作
+- 记录交易执行结果
+
+### 4. trade_window_control.py
+- 控制交易窗口
+- 处理界面切换
+- 管理交易模式
 
 ## 注意事项
+1. 使用前请确保同花顺客户端已正确安装在默认路径（D:\同花顺）
+2. 首次运行前需完成环境配置和依赖安装
+3. 请确保系统有足够的权限执行自动化操作
+4. 建议在使用前先进行小规模测试
 
-- 使用前需要先登录聚宽平台获取有效的cookie信息
-- 确保同花顺客户端已正确安装并能正常登录
-- 所有操作前请确保已激活虚拟环境
-- 自动化交易过程中请勿手动操作鼠标和键盘
-- 建议在执行自动化交易前先进行小额测试
-- 请确保网络连接稳定，以保证数据获取和交易执行的可靠性
+## 日志说明
+系统会在logs目录下生成以下日志文件：
+- ths_client.log: 客户端操作日志
+- extract_signals.log: 信号提取日志
+- trade_executor.log: 交易执行日志
+- trade_window.log: 窗口操作日志
+
+## 数据文件
+系统在data目录下维护以下数据文件：
+- jq_log_data.json: 原始交易日志
+- trade_signals.json: 提取的交易信号
+
+## 安全提示
+1. 请勿在公共环境下保存交易账户信息
+2. 建议定期检查日志文件，及时发现异常
+3. 使用自动化交易时需谨慎，建议设置合理的交易限额
