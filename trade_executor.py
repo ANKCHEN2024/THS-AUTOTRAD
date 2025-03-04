@@ -3,6 +3,7 @@ import time
 import os
 import json
 import sys
+import datetime
 
 # 添加当前目录到Python路径
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -17,13 +18,21 @@ from trade_window_control import TradeWindowControl
 from open_ths_client import THSClient, main as open_ths_main
 
 # 配置日志
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler()  # 只输出到控制台
-    ]
-)
+log_file = 'logs/trade_executor.log'
+os.makedirs('logs', exist_ok=True)
+
+file_handler = logging.FileHandler(log_file, encoding='utf-8')
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
 
 class TradeExecutor:
     def __init__(self):
@@ -256,7 +265,8 @@ def main():
     try:
         # 首先尝试查找已提取的交易信号文件
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        extracted_signals_file = os.path.join(current_dir, "trade_signals.json")
+        data_dir = os.path.join(current_dir, "data")
+        extracted_signals_file = os.path.join(data_dir, "trade_signals.json")
         
         trade_signals = []
         
@@ -291,7 +301,7 @@ def main():
         # 如果没有找到已提取的交易信号或加载失败，从原始日志提取
         if not trade_signals:
             logging.info("未找到已提取的交易信号，从原始日志提取")
-            log_file = os.path.join(current_dir, "jq_log_data.json")
+            log_file = os.path.join(data_dir, "jq_log_data.json")
             
             if not os.path.exists(log_file):
                 logging.error(f"原始日志文件不存在: {log_file}")

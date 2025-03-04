@@ -1,7 +1,25 @@
 import json
 import datetime
 import logging
+import os
 from collections import defaultdict
+
+# 配置日志
+log_file = 'logs/extract_signals.log'
+os.makedirs('logs', exist_ok=True)
+
+file_handler = logging.FileHandler(log_file, encoding='utf-8')
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
 
 def load_log_data(file_path):
     """加载日志数据"""
@@ -149,7 +167,9 @@ def print_grouped_signals(grouped_signals):
 
 def main():
     # 日志数据文件路径
-    log_file = "jq_log_data.json"
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(current_dir, "data")
+    log_file = os.path.join(data_dir, "jq_log_data.json")
     
     # 加载日志数据
     log_data = load_log_data(log_file)

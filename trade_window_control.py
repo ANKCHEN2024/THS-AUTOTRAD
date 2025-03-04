@@ -1,6 +1,24 @@
 import pyautogui
 import time
 import logging
+import os
+
+# 配置日志
+log_file = 'logs/trade_window.log'
+os.makedirs('logs', exist_ok=True)
+
+file_handler = logging.FileHandler(log_file, encoding='utf-8')
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
 
 class TradeWindowControl:
     def __init__(self):

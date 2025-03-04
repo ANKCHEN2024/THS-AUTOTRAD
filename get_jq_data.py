@@ -28,7 +28,7 @@ logger.addHandler(console_handler)
 def check_for_new_data(new_data):
     """检查是否有新数据"""
     try:
-        with open('jq_log_data.json', 'r', encoding='utf-8') as f:
+        with open('data/jq_log_data.json', 'r', encoding='utf-8') as f:
             old_data = json.load(f)
         return new_data['data']['logArr'] != old_data['data']['logArr']
     except FileNotFoundError:
@@ -43,7 +43,7 @@ def process_new_data():
     """处理新数据，提取交易信号并执行交易"""
     try:
         # 加载最新的日志数据
-        with open('jq_log_data.json', 'r', encoding='utf-8') as f:
+        with open('data/jq_log_data.json', 'r', encoding='utf-8') as f:
             log_data = json.load(f)
         
         # 提取交易信号（已修改为只提取当天的交易信号）
@@ -51,7 +51,7 @@ def process_new_data():
         
         if trade_signals:
             # 保存提取的交易信号
-            with open('trade_signals.json', 'w', encoding='utf-8') as f:
+            with open('data/trade_signals.json', 'w', encoding='utf-8') as f:
                 json.dump(trade_signals, f, ensure_ascii=False, indent=2)
             logging.info(f"已提取{len(trade_signals)}个交易信号并保存")
             
@@ -119,7 +119,7 @@ def fetch_jq_data():
             has_new_data = check_for_new_data(data)
             
             # 将数据保存到文件
-            with open("jq_log_data.json", "w", encoding="utf-8") as f:
+            with open("data/jq_log_data.json", "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
             logging.info("数据已更新并保存到 jq_log_data.json 文件")
             
