@@ -115,6 +115,33 @@ class THSClient:
             # 等待界面完全加载
             time.sleep(3)
             
+            # 查找并确保同花顺主窗口处于激活状态（非最小化）
+            ths_window = None
+            for window in pyautogui.getAllWindows():
+                if "同花顺" in window.title and "网上股票交易" not in window.title:
+                    ths_window = window
+                    # 确保窗口不是最小化状态
+                    if window.isMinimized:
+                        logging.info("同花顺窗口处于最小化状态，正在恢复")
+                        window.restore()
+                        time.sleep(1)
+                    
+                    # 激活窗口
+                    window.activate()
+                    logging.info(f"已激活同花顺主窗口: {window.title}")
+                    time.sleep(2)
+                    
+                    # 点击窗口中心以确保窗口真正激活
+                    window_center_x = window.left + window.width // 2
+                    window_center_y = window.top + window.height // 2
+                    pyautogui.click(window_center_x, window_center_y)
+                    time.sleep(0.5)
+                    break
+            
+            if not ths_window:
+                logging.error("未找到同花顺主窗口")
+                return False
+            
             # 使用F12快捷键打开交易界面，避免使用不可靠的图像识别
             logging.info("尝试使用F12快捷键打开交易界面")
             pyautogui.press('f12')

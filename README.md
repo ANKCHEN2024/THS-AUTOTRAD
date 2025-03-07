@@ -18,8 +18,8 @@
 
 ### 2. 安装步骤
 ```bash
-# 创建虚拟环境
-python -m venv venv
+# 使用指定的Python解释器创建虚拟环境
+C:\Users\Administrator\AppData\Local\Programs\Python\Python311\python.exe -m venv venv
 
 # 激活虚拟环境(Windows)
 .\venv\Scripts\activate
@@ -27,6 +27,8 @@ python -m venv venv
 # 安装依赖
 pip install -r requirements.txt
 ```
+
+注意：如果您的Python安装路径不同，请相应调整上述命令中的Python路径。
 
 ## 使用方法
 ### 1. 启动监控系统

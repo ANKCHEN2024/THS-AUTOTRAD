@@ -24,14 +24,14 @@ start "JoinQuant Data Monitor" /min cmd /k ""%~dp0venv\Scripts\python.exe" "%~dp
 :: Wait for 2 seconds
 timeout /t 2 /nobreak
 
-:: Start trade signal extraction monitor
-start "Trade Signal Monitor" /min cmd /k ""%~dp0venv\Scripts\python.exe" "%~dp0extract_trade_signals.py""
+:: Start trade signal extraction monitor with auto-restart
+start "Trade Signal Monitor" /min cmd /k "@echo off & :loop & "%~dp0venv\Scripts\python.exe" "%~dp0extract_trade_signals.py" & timeout /t 5 /nobreak & goto loop"
 
 :: Wait for 2 seconds
 timeout /t 2 /nobreak
 
-:: Start trade execution monitor
-start "Trade Execution Monitor" /min cmd /k ""%~dp0venv\Scripts\python.exe" "%~dp0trade_executor.py""
+:: Start trade execution monitor with auto-restart
+start "Trade Execution Monitor" /min cmd /k "@echo off & :loop & "%~dp0venv\Scripts\python.exe" "%~dp0trade_executor.py" & timeout /t 5 /nobreak & goto loop"
 
 :: Keep window open
 pause

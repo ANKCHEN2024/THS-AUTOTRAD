@@ -1,7 +1,10 @@
 pyautogui==0.9.54
 pywin32==306
-opencv-python==4.8.1.78
+opencv-python==4.6.0.66
 pillow==10.1.0
-numpy==1.26.2
+numpy==1.24.3
 keyboard==0.13.5
 mouse==0.7.1
+psutil==5.9.6
+requests==2.31.0
+schedule==1.2.0
